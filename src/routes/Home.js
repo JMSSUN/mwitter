@@ -1,27 +1,35 @@
 import { dbService } from 'fbase';
 import React, { useEffect, useState } from 'react';
 
-const Home = () => {
+const Home = ({userObj}) => {
     const [mweet, setMweet] = useState("");
     const [mweets, setMweets] = useState([]);
-    const getMweets = async() => {
-        const dbMweets = await dbService.collection("mweets").get();
-        dbMweets.forEach((document) => {
-            const mweetObject = {
-                ...document.data(),
-                id: document.id
-            }
-            setMweets(prev => [mweetObject, ...prev]); // 가장 최근 data부터 
-        });
-    }
+    // const getMweets = async() => {
+    //     const dbMweets = await dbService.collection("mweets").get();
+    //     dbMweets.forEach((document) => {
+    //         const mweetObject = {
+    //             ...document.data(),
+    //             id: document.id
+    //         }
+    //         setMweets(prev => [mweetObject, ...prev]); // 가장 최근 data부터 
+    //     });
+    // }
     useEffect(() => {
-        getMweets();
+        // getMweets();
+        dbService.collection("mweets").onSnapshot(snapshot => {
+            const mweetArray = snapshot.docs.map(doc => ({
+                id:doc.id, 
+                ...doc.data(),
+            }));
+            setMweets(mweetArray);
+        });
     }, []);
     const onSubmit = async (event) => {
         event.preventDefault();
         await dbService.collection("mweets").add({
-            mweet,
-            createdAt: Date.now()
+            text: mweet,
+            createdAt: Date.now(),
+            createrId: userObj.uid
         });
         setMweet("");
     };
@@ -40,7 +48,7 @@ const Home = () => {
             <div>
                 {mweets.map((mweet) => (
                     <div key={mweet.id}>
-                        <h4>{mweet.mweet}</h4>
+                        <h4>{mweet.text}</h4>
                     </div>
                 ))}
             </div>
