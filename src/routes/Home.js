@@ -1,5 +1,6 @@
 import { dbService } from 'fbase';
 import React, { useEffect, useState } from 'react';
+import Mweet from 'components/Mweet';
 
 const Home = ({userObj}) => {
     const [mweet, setMweet] = useState("");
@@ -16,6 +17,7 @@ const Home = ({userObj}) => {
     // }
     useEffect(() => {
         // getMweets();
+        //orderBy("createdAt","desc").
         dbService.collection("mweets").onSnapshot(snapshot => {
             const mweetArray = snapshot.docs.map(doc => ({
                 id:doc.id, 
@@ -47,9 +49,7 @@ const Home = ({userObj}) => {
             </form>
             <div>
                 {mweets.map((mweet) => (
-                    <div key={mweet.id}>
-                        <h4>{mweet.text}</h4>
-                    </div>
+                    <Mweet key={mweet.id} mweetObj={mweet} isOwner={mweet.createrId === userObj.uid}/>
                 ))}
             </div>
         </div>
