@@ -1,10 +1,12 @@
-import { dbService } from 'fbase';
+import { dbService, storageService } from 'fbase';
 import React, { useEffect, useState } from 'react';
+import {v4 as uuidv4} from 'uuid';
 import Mweet from 'components/Mweet';
 
 const Home = ({userObj}) => {
     const [mweet, setMweet] = useState("");
     const [mweets, setMweets] = useState([]);
+    const [attachment, setAttachment] = useState();
     // const getMweets = async() => {
     //     const dbMweets = await dbService.collection("mweets").get();
     //     dbMweets.forEach((document) => {
@@ -28,12 +30,15 @@ const Home = ({userObj}) => {
     }, []);
     const onSubmit = async (event) => {
         event.preventDefault();
-        await dbService.collection("mweets").add({
-            text: mweet,
-            createdAt: Date.now(),
-            createrId: userObj.uid
-        });
-        setMweet("");
+        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+        const response = await fileRef.putString(attachment, "data_url");
+        
+        // await dbService.collection("mweets").add({
+        //     text: mweet,
+        //     createdAt: Date.now(),
+        //     createrId: userObj.uid
+        // });
+        // setMweet("");
     };
 
     const onChange = (event) => {
@@ -41,11 +46,37 @@ const Home = ({userObj}) => {
         setMweet(value);
     };
 
+    const onFileChange = (event) => {
+        // console.log(event.target.files);
+        const {
+            target: {files},
+        } = event; // event 안에서 target 안에서 파일을 받아오는 것 
+        const theFile = files[0];
+        const reader = new FileReader();
+        reader.onloadend = (finishedEvent) => {
+            // console.log(finishedEvent);
+            const {
+                currentTarget: {result}
+            } = finishedEvent;
+            setAttachment(result);
+        };
+        reader.readAsDataURL(theFile);
+    };
+
+    const onClearAttachment = () => setAttachment(null);
+
     return (
         <div>
             <form onSubmit={onSubmit}>
                 <input value={mweet} onChange={onChange} type="text" placeholder="What's on your mind" maxLength={120} />
+                <input type="file" accept="image/*" onChange={onFileChange} />
                 <input type="submit" value="Mweet" />
+                {attachment && (
+                    <div>
+                        <img src={attachment} width="50px" height="50px" /> 
+                        <button onClick={onClearAttachment}>Clear</button>
+                    </div>
+                )}
             </form>
             <div>
                 {mweets.map((mweet) => (

@@ -16,7 +16,7 @@ const Mweet = ({mweetObj, isOwner}) => {
     const toggleEditing = () => setEditing((prev) => !prev);
     const onSubmit = async(event) => {
         event.preventDefault();
-        console.log(mweetObj, newMweet);
+        // console.log(mweetObj, newMweet);
         await dbService.doc(`mweets/${mweetObj.id}`).update({
             text:newMweet
         });
