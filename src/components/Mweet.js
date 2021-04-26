@@ -1,4 +1,4 @@
-import { dbService } from 'fbase';
+import { dbService, storageService } from 'fbase';
 import React, { useState } from 'react';
 
 const Mweet = ({mweetObj, isOwner}) => {
@@ -10,6 +10,9 @@ const Mweet = ({mweetObj, isOwner}) => {
         if(ok) {
             //delete
             await dbService.doc(`mweets/${mweetObj.id}`).delete();
+            if(mweetObj.attachmentUrl !== "" ){
+                await storageService.refFromURL(mweetObj.attachmentUrl).delete();
+            }
         }
     };
 
@@ -43,6 +46,7 @@ const Mweet = ({mweetObj, isOwner}) => {
             ) : (
             <>
                 <h4>{mweetObj.text}</h4>
+                {mweetObj.attachmentUrl && <img src={mweetObj.attachmentUrl} width="50px" height="50px"/>}
                 {isOwner && (
                     <>
                         <button onClick={onDeleteClick}>Delete</button>
