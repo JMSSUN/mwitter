@@ -31,7 +31,7 @@ const Home = ({userObj}) => {
     const onSubmit = async (event) => {
         event.preventDefault();
         let attachmentUrl = "";
-        if(attachment != "") { // 첨부파일 있을 때
+        if(attachment !== "") { // 첨부파일 있을 때
             const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
             const response = await attachmentRef.putString(attachment, "data_url");
             attachmentUrl = await response.ref.getDownloadURL();
@@ -40,7 +40,7 @@ const Home = ({userObj}) => {
         const mweetObj = {
             text: mweet,
             createdAt: Date.now(),
-            createrId: userObj.uid,
+            creatorId: userObj.uid,
             attachmentUrl
         };
 
@@ -88,7 +88,7 @@ const Home = ({userObj}) => {
             </form>
             <div>
                 {mweets.map((mweet) => (
-                    <Mweet key={mweet.id} mweetObj={mweet} isOwner={mweet.createrId === userObj.uid}/>
+                    <Mweet key={mweet.id} mweetObj={mweet} isOwner={mweet.creatorId === userObj.uid}/>
                 ))}
             </div>
         </div>
