@@ -11,7 +11,7 @@ const Profile = ({userObj, refreshUser}) => {
     }
     const getMyMweets = async() => {
         const mweets = await dbService.collection("mweets").where("creatorId", "==", userObj.uid).orderBy("createdAt", "desc").get();
-        console.log(mweets.docs.map(doc => doc.data()));
+        // console.log(mweets.docs.map(doc => doc.data()));
     }
     useEffect(() => {
         getMyMweets();
