@@ -1,5 +1,7 @@
 import { dbService, storageService } from 'fbase';
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Mweet = ({mweetObj, isOwner}) => {
     const [editing, setEditing] = useState(false);
@@ -34,24 +36,28 @@ const Mweet = ({mweetObj, isOwner}) => {
 
     return (
        
-        <div>
+        <div className="nweet">
            {editing ? (
             <>
-                <form onSubmit={onSubmit}>
-                    <input type="text" placeholder="Edit your mweet " value={newMweet} required onChange={onChange} /> 
-                    <input type="submit" value="Update Mweet" />
-                    <button onClick={toggleEditing}>Cancel</button>
+                <form onSubmit={onSubmit}  className="container nweetEdit">
+                    <input type="text" placeholder="Edit your mweet " value={newMweet} required onChange={onChange} autoFocus className="formInput"/> 
+                    <input type="submit" value="Update Mweet" className="formBtn" />
+                    <span onClick={toggleEditing} className="formBtn cancelBtn">Cancel</span>
                 </form>
             </>
             ) : (
             <>
                 <h4>{mweetObj.text}</h4>
-                {mweetObj.attachmentUrl && <img src={mweetObj.attachmentUrl} width="50px" height="50px"/>}
+                {mweetObj.attachmentUrl && <img src={mweetObj.attachmentUrl} />}
                 {isOwner && (
-                    <>
-                        <button onClick={onDeleteClick}>Delete</button>
-                        <button onClick={toggleEditing}>Edit</button>
-                    </>
+                    <div class="nweet__actions">
+                        <span onClick={onDeleteClick}>
+                        <FontAwesomeIcon icon={faTrash} />
+                        </span>
+                        <span onClick={toggleEditing}>
+                        <FontAwesomeIcon icon={faPencilAlt} />
+                        </span>
+                    </div>
                 )}
             </>
            )
