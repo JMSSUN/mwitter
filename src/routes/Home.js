@@ -19,7 +19,7 @@ const Home = ({userObj}) => {
     useEffect(() => {
         // getMweets();
         //orderBy("createdAt","desc").
-        dbService.collection("mweets").onSnapshot(snapshot => {
+        dbService.collection("mweets").orderBy("createdAt","desc").onSnapshot(snapshot => {
             const mweetArray = snapshot.docs.map(doc => ({
                 id:doc.id, 
                 ...doc.data(),
