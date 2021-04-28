@@ -30,8 +30,8 @@ const Auth = () => {
             />
             <AuthForm />
             <div className="authBtns">
-                <button name="google" onClick={onSocialClick} className="authBtns">Continue with Google <FontAwesomeIcon icon={faGoogle} /></button>
-                <button name="github" onClick={onSocialClick} className="authBtns">Continue with GitHub <FontAwesomeIcon icon={faGithub} /></button>
+                <button name="google" onClick={onSocialClick} className="authBtn">Continue with Google <FontAwesomeIcon icon={faGoogle} /></button>
+                <button name="github" onClick={onSocialClick} className="authBtn">Continue with GitHub <FontAwesomeIcon icon={faGithub} /></button>
             </div>
         </div>
     );
