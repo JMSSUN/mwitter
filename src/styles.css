@@ -5,9 +5,9 @@
 }
 
 input {
-  all: unset;
-  box-sizing: border-box;
+  all: unset;  
   appearance: none;
+  box-sizing: border-box;
 }
 
 body {
